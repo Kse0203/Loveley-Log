@@ -1,13 +1,342 @@
-<!DOCTYPE html>
-
-<html>
+<!<!DOCTYPE html>
+<html lang="ko">
 <head>
-  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
-  <title>Hello, World!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🎀 Lovely Log 🎀</title>
+    <style>
+        body {
+            background-color: #fff9fa;
+            font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
+            margin: 0; padding: 0; color: #614d52;
+        }
+        nav {
+            background: linear-gradient(135deg, #ffdeeb, #ffb3d1);
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 90;
+            box-shadow: 0 4px 10px rgba(255, 179, 209, 0.2);
+            border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;
+        }
+        .logo-area {
+            font-size: 20px; font-weight: bold; color: #fff; text-decoration: none;
+            text-shadow: 1.5px 1.5px 0px #ff6b9d; cursor: pointer; user-select: none;
+        }
+        .nav-tabs {
+            background-color: #fff; border-bottom: 1px solid #ffe3ec; display: flex;
+            padding: 5px 10px; overflow-x: auto; gap: 10px;
+        }
+        .tab {
+            padding: 10px 15px; color: #a38d93; font-size: 13px; font-weight: bold;
+            cursor: pointer; white-space: nowrap; border-radius: 20px; background-color: #fff0f3; margin: 5px 0;
+        }
+        .tab.active {
+            color: #fff; background: linear-gradient(135deg, #ff8fa3, #ff758f);
+            box-shadow: 0 3px 6px rgba(255, 117, 143, 0.3);
+        }
+        .container { display: flex; max-width: 1000px; margin: 15px auto; gap: 15px; padding: 0 12px; flex-direction: column; }
+        @media (min-width: 768px) { .container { flex-direction: row; } }
+        .feed-section { flex: 2; }
+        .feed-card {
+            background-color: #fff; padding: 18px; margin-bottom: 12px; border-radius: 18px;
+            border: 2px solid #ffe3ec; box-shadow: 0 3px 10px rgba(255, 227, 236, 0.3); cursor: pointer;
+        }
+        .author-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .author-name { font-size: 13px; font-weight: bold; color: #7d6368; }
+        .category-badge { background-color: #fff0f3; color: #ff5c7c; font-size: 11px; font-weight: bold; padding: 2px 10px; border-radius: 20px; }
+        .card-title { margin: 5px 0; font-size: 16px; color: #4a373b; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .card-title::after { content: '💖'; font-size: 12px; }
+        .card-text { margin-top: 12px; font-size: 14px; color: #6b555a; line-height: 1.6; padding-top: 12px; border-top: 1px dotted #ffe3ec; display: none; }
+        .side-section { flex: 1; }
+        .login-box { background-color: #fff; padding: 20px; border-radius: 18px; border: 2px solid #ffe3ec; text-align: center; box-shadow: 0 3px 10px rgba(255, 227, 236, 0.3); }
+        .login-btn, .write-btn {
+            background: linear-gradient(135deg, #ff8fa3, #ff758f); color: #fff; border: none;
+            width: 100%; padding: 12px; border-radius: 12px; font-size: 14px; font-weight: bold; cursor: pointer;
+            margin-top: 12px; box-shadow: 0 4px 8px rgba(255, 117, 143, 0.3);
+        }
+        .write-btn { background: linear-gradient(135deg, #ff758f, #ff4d6d); display: none; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.4);
+            display: none; justify-content: center; align-items: center; z-index: 200;
+        }
+        .modal-box {
+            background-color: white; width: 85%; max-width: 340px; padding: 22px; border-radius: 24px;
+            border: 3px solid #ffe3ec; box-shadow: 0 10px 25px rgba(255, 117, 143, 0.2); text-align: center;
+            animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-box h3 { margin: 0 0 12px 0; font-size: 16px; color: #ff5c7c; }
+        .modal-input {
+            width: 100%; padding: 10px; margin-bottom: 12px; border: 2px solid #ffe3ec;
+            border-radius: 10px; box-sizing: border-box; outline: none; font-size: 14px; color: #614d52;
+        }
+        .modal-input:focus { border-color: #ff758f; }
+        .modal-select {
+            width: 100%; padding: 10px; margin-bottom: 12px; border: 2px solid #ffe3ec;
+            border-radius: 10px; outline: none; font-size: 14px; color: #614d52; background-color: #fff;
+        }
+        .modal-btn-group { display: flex; gap: 8px; }
+        .modal-btn { flex: 1; padding: 10px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 13px; }
+        .modal-btn.confirm { background: #ff758f; color: white; }
+        .modal-btn.cancel { background: #f1f5f9; color: #a38d93; }
+    </style>
 </head>
 <body>
-  <h1>
-    Hello, World!
-  </h1>
+
+    <nav>
+        <div class="logo-area" id="logoBtn">🎀 Lovely Log</div>
+        <div style="font-size: 12px; color: #fff; font-weight: bold;">💗 오늘의 기록</div>
+    </nav>
+
+    <div class="nav-tabs" id="tabContainer">
+        <div class="tab active" id="allTab">전체 홈 🏠</div>
+        <div class="tab" id="dailyTab">일상 🦄</div>
+        <div class="tab" id="foodTab">맛집 🍰</div>
+        <div class="tab" id="itTab">IT/컴퓨터 💻</div>
+    </div>
+
+    <div class="container">
+        <main class="feed-section">
+            <div id="dynamicFeed"></div>
+        </main>
+
+        <aside class="side-section">
+            <div class="login-box" id="profileArea">
+                <p style="margin: 0; color: #a38d93; font-size: 13px; line-height: 1.5;">오늘의 예쁜 일상과 생각들을<br>러블리로그에 속닥속닥 남겨봐요 🍒</p>
+                <button class="login-btn" id="loginBtn">이메일로 시작하기 💘</button>
+            </div>
+            <button class="write-btn" id="writeBtn">✏️ 예쁜 글 남기기</button>
+        </aside>
+    </div>
+
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <h3>🍓 이메일 인증 로그인 🍓</h3>
+            <p style="font-size: 12px; color: #a38d93; margin-top: 0;">입력하신 이메일로 가입/로그인 링크가 전송됩니다.</p>
+            <input type="email" id="loginEmail" class="modal-input" placeholder="example@email.com">
+            <div class="modal-btn-group">
+                <button class="modal-btn cancel" id="loginCancelBtn">취소</button>
+                <button class="modal-btn confirm" id="loginConfirmBtn">인증메일 보내기 💌</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="writeModal">
+        <div class="modal-box">
+            <h3>📝 오늘의 기록 남기기 📝</h3>
+            <input type="text" id="writeTitle" class="modal-input" placeholder="러블리한 글 제목">
+            <textarea id="writeText" class="modal-input" rows="4" placeholder="달콤한 내용 채우기" style="resize:none; font-family:inherit;"></textarea>
+            <select id="writeCategory" class="modal-select">
+                <option value="일상">일상 🦄</option>
+                <option value="맛집">맛집 🍰</option>
+                <option value="IT/컴퓨터">IT/컴퓨터 💻</option>
+            </select>
+            <div class="modal-btn-group">
+                <button class="modal-btn cancel" id="writeCancelBtn">닫기</button>
+                <button class="modal-btn confirm" id="writeConfirmBtn">올리기 ✨</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+        import { getAuth, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBZaTcc4ZNfLs8xporPBlm5kuGKqQ26lCY",
+            authDomain: "lovely-log.firebaseapp.com",
+            projectId: "lovely-log",
+            storageBucket: "lovely-log.appspot.com",
+            messagingSenderId: "1046868596941",
+            appId: "1:1046868596941:web:aee9bcaa37a86c4db8b184",
+            measurementId: "G-8GJJW3X86J"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let currentCategory = "전체";
+        let currentUserEmail = null;
+
+        if (isSignInWithEmailLink(auth, window.location.href)) {
+            let email = window.localStorage.getItem('emailForSignIn');
+            if (!email) {
+                email = window.prompt('인증을 완료하기 위해 이메일을 다시 입력해 주세요.');
+            }
+            signInWithEmailLink(auth, email, window.location.href)
+                .then(() => {
+                    window.localStorage.removeItem('emailForSignIn');
+                    alert("인증 성공! 환영합니다 💖");
+                    window.location.hash = "";
+                })
+                .catch(() => {
+                    alert("인증에 실패했거나 만료된 링크입니다구.. 💧");
+                });
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUserEmail = user.email;
+                renderProfile(user.email);
+                document.getElementById("writeBtn").style.display = "block";
+            } else {
+                currentUserEmail = null;
+                renderProfile(null);
+                document.getElementById("writeBtn").style.display = "none";
+            }
+            renderFeed();
+        });
+
+        document.getElementById('logoBtn').addEventListener('click', goHome);
+        document.getElementById('loginBtn').addEventListener('click', openLoginModal);
+        document.getElementById('writeBtn').addEventListener('click', openWriteModal);
+        document.getElementById('loginCancelBtn').addEventListener('click', () => closeModal('loginModal'));
+        document.getElementById('writeCancelBtn').addEventListener('click', () => closeModal('writeModal'));
+        document.getElementById('loginConfirmBtn').addEventListener('click', sendAuthEmail);
+        document.getElementById('writeConfirmBtn').addEventListener('click', submitWrite);
+
+        document.getElementById('allTab').addEventListener('click', function() { switchCategory('전체', this); });
+        document.getElementById('dailyTab').addEventListener('click', function() { switchCategory('일상', this); });
+        document.getElementById('foodTab').addEventListener('click', function() { switchCategory('맛집', this); });
+        document.getElementById('itTab').addEventListener('click', function() { switchCategory('IT/컴퓨터', this); });
+
+        function goHome() { const allTab = document.getElementById('allTab'); switchCategory('전체', allTab); }
+        function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; document.getElementById('loginEmail').focus(); }
+        function openWriteModal() { document.getElementById('writeModal').style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function sendAuthEmail() {
+            const email = document.getElementById('loginEmail').value.trim();
+            if (!email) { alert("이메일을 입력해 주세요!"); return; }
+
+            const actionCodeSettings = {
+                url: window.location.href, 
+                handleCodeInApp: true
+            };
+
+            sendSignInLinkToEmail(auth, email, actionCodeSettings)
+                .then(() => {
+                    window.localStorage.setItem('emailForSignIn', email);
+                    alert(`💌 인증 메일이 발송되었습니다!\n[${email}]의 편지함을 확인한 뒤 인증 링크를 눌러주세요!`);
+                    closeModal('loginModal');
+                })
+                .catch((error) => {
+                    console.error(error);
+                    alert("메일 발송 실패구.. Firebase Console에서 Email 링크 로그인을 켰는지 확인해 보세요!");
+                });
+        }
+
+        async function submitWrite() {
+            const title = document.getElementById('writeTitle').value.trim();
+            const text = document.getElementById('writeText').value.trim();
+            const category = document.getElementById('writeCategory').value;
+
+            if(!title || !text) return;
+
+            const newPost = { 
+                name: currentUserEmail ? currentUserEmail.split('@')[0] : "익명🍒", 
+                title: title, 
+                text: text, 
+                category: category,
+                createdAt: new Date().getTime()
+            };
+
+            try {
+                await addDoc(collection(db, "posts"), newPost);
+                document.getElementById('writeTitle').value = "";
+                document.getElementById('writeText').value = "";
+                closeModal('writeModal');
+                renderFeed();
+            } catch (error) {
+                alert("서버 저장 실패구.. 규칙 설정을 확인해 보세요!");
+            }
+        }
+
+        function switchCategory(category, tabElement) {
+            currentCategory = category;
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            tabElement.classList.add('active');
+            renderFeed();
+        }
+
+        window.toggleContent = function(cardElement) {
+            const textBlock = cardElement.querySelector('.card-text');
+            if (textBlock.style.display === 'block') {
+                textBlock.style.display = 'none';
+                cardElement.style.borderColor = '#ffe3ec';
+            } else {
+                textBlock.style.display = 'block';
+                cardElement.style.borderColor = '#ff758f';
+            }
+        }
+
+        function renderProfile(email) {
+            const profileArea = document.getElementById("profileArea");
+            if (email) {
+                const displayName = email.split('@')[0];
+                profileArea.innerHTML = `
+                    <div style="text-align: left;">
+                        <strong style="font-size: 15px; color:#ff758f;">🍒 ${displayName}님의 공간</strong>
+                        <p style="color: #a38d93; font-size: 11px; margin: 2px 0 15px 0; word-break: break-all;">(${email})</p>
+                        <button id="logoutBtn" style="width: 100%; padding: 8px; background: #fff0f3; border: none; border-radius: 8px; cursor: pointer; font-size: 12px; color:#ff758f; font-weight:bold;">로그아웃 💨</button>
+                    </div>
+                `;
+                document.getElementById('logoutBtn').addEventListener('click', () => {
+                    signOut(auth).then(() => { alert("로그아웃 되었습니다."); });
+                });
+            } else {
+                profileArea.innerHTML = `
+                    <p style="margin: 0; color: #a38d93; font-size: 13px; line-height: 1.5;">오늘의 예쁜 일상과 생각들을<br>러블리로그에 속닥속닥 남겨봐요 🍒</p>
+                    <button class="login-btn" id="innerLoginBtn">이메일로 시작하기 💘</button>
+                `;
+                document.getElementById('innerLoginBtn').addEventListener('click', openLoginModal);
+            }
+        }
+
+        async function renderFeed() {
+            const dynamicFeed = document.getElementById("dynamicFeed");
+            dynamicFeed.innerHTML = `<div style="text-align:center; color:#a38d93; padding:40px 0; font-size:14px;">서버에서 소식을 불러오는 중... 🔍</div>`;
+
+            try {
+                const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                let posts = [];
+                querySnapshot.forEach((doc) => { posts.push(doc.data()); });
+
+                if(posts.length === 0) {
+                    posts = [
+                        { name: "빵순이🍓", title: "🍰 성수동 역대급 딸기 타르트 맛集 공유해용", text: "여기 크림치즈 베이스가 대박이에요! 딸기도 완전 알차고 비주얼이 너무 영롱해서 사진 오백 장 찍구 왔습니당 꼭 가보세효..💖", category: "맛집" },
+                        { name: "키티더쿠", title: "🎀 이번에 산 미니미 키링 졸귀탱천구", text: "가방에 달고 다니는데 친구들이 다 어디서 샀냐구 물어봐요 히히! 역시 핑크 소품은 진리입니당구 🦄", category: "일상" }
+                    ];
+                }
+
+                dynamicFeed.innerHTML = "";
+                const filteredPosts = posts.filter(post => currentCategory === "전체" || post.category === currentCategory);
+
+                if(filteredPosts.length === 0) {
+                    dynamicFeed.innerHTML = `<div style="text-align:center; color:#a38d93; padding:40px 0; font-size:14px;">아직 기록된 소식이 없어요 💧</div>`;
+                    return;
+                }
+
+                filteredPosts.forEach(post => {
+                    dynamicFeed.innerHTML += `
+                        <div class="feed-card" onclick="toggleContent(this)">
+                            <div class="author-box">
+                                <span class="author-name">🌸 ${post.name}</span>
+                                <span class="category-badge">${post.category}</span>
+                            </div>
+                            <h3 class="card-title">${post.title}</h3>
+                            <p class="card-text">${post.text}</p>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                dynamicFeed.innerHTML = `<div style="text-align:center; color:#a38d93; padding:40px 0; font-size:14px;">서버 연결 에러 💧 규칙 설정을 확인해 보세요!</div>`;
+            }
+        }
+    </script>
 </body>
 </html>
